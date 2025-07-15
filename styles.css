@@ -1,0 +1,19 @@
+:root{
+    --cor-de-fundo: #f0f0f0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    background-color: var(--cor-de-fundo);
+}
+
+canvas {
+    display: block;
+    background-color: var(--cor-de-fundo);
+}
