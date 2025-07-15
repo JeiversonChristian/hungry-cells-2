@@ -10,6 +10,8 @@ const celula = {
     y: 100,
     raio: 25,
     cor: 'blue',
+    corContorno: 'black',
+    grossuraContorno: 3,
     vel: 5,
     teclas: {}
 };
@@ -40,6 +42,11 @@ function desenharCelula(c) {
     ctx.arc(c.x, c.y, c.raio, 0, Math.PI * 2);
     ctx.fillStyle = c.cor;
     ctx.fill();
+    if (c === celula) {
+        ctx.strokeStyle = c.corContorno;
+        ctx.lineWidth = c.grossuraContorno;
+        ctx.stroke();
+    }
     ctx.closePath();
 }
 
