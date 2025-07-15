@@ -2,8 +2,11 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Ajusta o tamanho do canvas para a tela
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function ajustarCanvas() {
+    const main = document.getElementById('jogo');
+    canvas.width = main.clientWidth;
+    canvas.height = main.clientHeight;
+}
 
 const celula = {
     x: 100,
@@ -19,18 +22,20 @@ const celula = {
 const npcs = [];
 const quantNPCs = 5;  // quantos você quiser
 
-for (let i = 0; i < quantNPCs; i++) {
-    npcs.push({
-        x: Math.random() * (canvas.width - 50) + 25,
-        y: Math.random() * (canvas.height - 50) + 25,
-        raio: 25,
-        cor: 'blue',
-        vel: 5,
-        dirX: (Math.random() - 0.5) * 2,
-        dirY: (Math.random() - 0.5) * 2,
-        mudarDirContador: 0,
-        limiteParaMudarDir: Math.random() * 100
-    });
+function criarNPCs() {
+    for (let i = 0; i < quantNPCs; i++) {
+        npcs.push({
+            x: Math.random() * (canvas.width - 50) + 25,
+            y: Math.random() * (canvas.height - 50) + 25,
+            raio: 25,
+            cor: 'blue',
+            vel: 5,
+            dirX: (Math.random() - 0.5) * 2,
+            dirY: (Math.random() - 0.5) * 2,
+            mudarDirContador: 0,
+            limiteParaMudarDir: Math.random() * 100
+        });
+    }
 }
 
 function limparTela() {
@@ -206,4 +211,15 @@ function rodar_jogo() {
     requestAnimationFrame(rodar_jogo);
 }
 
-rodar_jogo();
+// Espera o DOM carregar para garantir que os elementos existam
+window.addEventListener('load', () => {
+    ajustarCanvas();
+
+    // Cria os NPCs APÓS o canvas ter sido ajustado
+    criarNPCs();
+
+    // Inicia o jogo só depois disso tudo
+    rodar_jogo();
+});
+
+window.addEventListener('resize', ajustarCanvas);
