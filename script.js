@@ -203,6 +203,26 @@ document.addEventListener('keyup', (e) => {
   celula.teclas[e.key.toLowerCase()] = false;
 });
 
+// Simula pressionar e soltar tecla com toques nos botões
+document.querySelectorAll('#controles button').forEach(botao => {
+    const direcao = botao.getAttribute('data-direcao');
+
+    botao.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // evita clique duplo no mobile
+        celula.teclas[direcao] = true;
+    });
+
+    botao.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        celula.teclas[direcao] = false;
+    });
+
+    // Suporte opcional para mouse
+    botao.addEventListener('mousedown', () => celula.teclas[direcao] = true);
+    botao.addEventListener('mouseup', () => celula.teclas[direcao] = false);
+    botao.addEventListener('mouseleave', () => celula.teclas[direcao] = false);
+});
+
 function rodar_jogo() {
     limparTela();
     moverCelula();

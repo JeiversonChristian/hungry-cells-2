@@ -1,6 +1,9 @@
 :root {
     --cor-de-fundo: #f0f0f0;
     --cor-header-footer: #ddd;
+    --cor-botao: #eee;
+    --cor-borda-botao: #444;
+    --cor-botao-ativo: #ccc;
 }
 
 * {
@@ -45,6 +48,25 @@ canvas {
     width: 100%;
     height: 100%;
     background-color: var(--cor-de-fundo);
+}
+
+#controles {
+    margin-top: 10px;
+}
+
+#controles button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    margin: 5px;
+    border-radius: 12px;
+    border: 2px solid var(--cor-borda-botao);
+    background-color: var(--cor-botao);
+    cursor: pointer;
+}
+
+#controles button:active {
+    background-color: var(--cor-botao-ativo);
 }
 
 /* Responsivo extra */
