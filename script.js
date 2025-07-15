@@ -192,7 +192,6 @@ function moverTodosNPCs() {
     }
 }
 
-
 // Evento de teclado
 // Escuta pressionar
 document.addEventListener('keydown', (e) => {
