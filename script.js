@@ -295,6 +295,15 @@ function atualizarVidaDasCelulas() {
     }
 }
 
+function atualizarBarraDeVida() {
+    const barra = document.getElementById('barra-vida');
+    if (celula.viva) {
+        barra.style.width = `${Math.max(0, celula.vida)}%`;
+    } else {
+        barra.style.width = '0%';
+    }
+}
+
 // Evento de teclado
 // Escuta pressionar
 document.addEventListener('keydown', (e) => {
@@ -340,10 +349,11 @@ function rodar_jogo() {
     verificarComidasComidas();
     tentarGerarMaisComidas();
     atualizarVidaDasCelulas();
+    atualizarBarraDeVida();
     requestAnimationFrame(rodar_jogo);
 }
 
-let celula = {};
+let celula = { viva: false };
 
 // Espera o DOM carregar para garantir que os elementos existam
 window.addEventListener('load', () => {

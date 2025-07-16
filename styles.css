@@ -1,17 +1,31 @@
+/****************************************
+ * 🎨 VARIÁVEIS DE CORES
+ ****************************************/
 :root {
     --cor-de-fundo: #000000;
-    --cor-header-footer: #ddd;
-    --cor-botao: #eee;
-    --cor-borda-botao: #444;
-    --cor-botao-ativo: #ccc;
+    --cor-header-footer: #dddddd;
+
+    --cor-botao: #eeeeee;
+    --cor-borda-botao: #444444;
+    --cor-botao-ativo: #cccccc;
+
+    --cor-barra-vida-fundo: #444444;
+    --cor-barra-vida-borda: #000000;
+    --cor-barra-vida-preenchimento: limegreen;
 }
 
+/****************************************
+ * 🔄 RESET BÁSICO
+ ****************************************/
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/****************************************
+ * 🌐 HTML E BODY - estrutura base
+ ****************************************/
 html, body {
     height: 100%;
     width: 100%;
@@ -24,6 +38,9 @@ body {
     flex-direction: column;
 }
 
+/****************************************
+ * 🏠 HEADER E FOOTER
+ ****************************************/
 header, footer {
     flex: 0 0 auto;
     padding: 10px 20px;
@@ -35,7 +52,21 @@ header h1 {
     font-size: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-/* Ajuste para garantir que o main preencha bem o espaço restante */
+/* Header como container flex para alinhar título e barra de vida */
+#topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#infos {
+    display: flex;
+    align-items: center;
+}
+
+/****************************************
+ * 🎮 MAIN E CANVAS (Área do jogo)
+ ****************************************/
 main#jogo {
     flex: 1 1 auto;
     min-height: 0;
@@ -50,6 +81,9 @@ canvas {
     background-color: var(--cor-de-fundo);
 }
 
+/****************************************
+ * 🎯 CONTROLES (botões no rodapé)
+ ****************************************/
 #controles {
     margin-top: 10px;
 }
@@ -63,23 +97,36 @@ canvas {
     border: 2px solid var(--cor-borda-botao);
     background-color: var(--cor-botao);
     cursor: pointer;
-}
-
-/* No celular, aumenta o tamanho dos botões */
-@media (max-width: 600px) {
-    #controles button {
-        width: 65px;
-        height: 65px;
-        font-size: 28px;
-        border-radius: 10px;
-    }
+    transition: background-color 0.2s;
 }
 
 #controles button:active {
     background-color: var(--cor-botao-ativo);
 }
 
-/* Responsivo extra */
+/****************************************
+ * ❤️ BARRA DE VIDA NO HEADER
+ ****************************************/
+#barra-vida-container {
+    width: 120px;
+    height: 20px;
+    background-color: var(--cor-barra-vida-fundo);
+    border: 2px solid var(--cor-barra-vida-borda);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#barra-vida {
+    height: 100%;
+    background-color: var(--cor-barra-vida-preenchimento);
+    width: 100%;
+    transition: width 0.3s;
+}
+
+/****************************************
+ * 📱 RESPONSIVIDADE
+ ****************************************/
+/* Ajusta padding em telas menores */
 @media (max-width: 600px) {
     header, footer {
         padding: 8px 12px;
@@ -87,5 +134,17 @@ canvas {
 
     header h1 {
         font-size: clamp(1.2rem, 5vw, 2rem);
+    }
+
+    #controles button {
+        width: 65px;
+        height: 65px;
+        font-size: 28px;
+        border-radius: 10px;
+    }
+
+    #barra-vida-container {
+        width: 90px;
+        height: 16px;
     }
 }
