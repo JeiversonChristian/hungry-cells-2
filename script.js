@@ -29,7 +29,7 @@ function criarCelulaPrincipal() {
 }
 
 const npcs = [];
-const quantNPCs = 10;
+let quantNPCs = 10;
 
 function criarNPCs() {
     for (let i = 0; i < quantNPCs; i++) {
@@ -48,8 +48,8 @@ function criarNPCs() {
 }
 
 const comidas = [];
-const totalCelulas = quantNPCs + 1; // NPCs + célula principal
-const quantComidas = Math.floor(totalCelulas * 1.5); // 150%, inteiro
+let totalCelulas = quantNPCs + 1; // NPCs + célula principal
+let quantComidas = Math.floor(totalCelulas * 1.5); // 150%, inteiro
 
 function criarComidas() {
     for (let i = 0; i < quantComidas; i++) {
@@ -221,6 +221,30 @@ function moverTodosNPCs() {
     }
 }
 
+function verificarComidasComidas() {
+    for (let i = quantComidas - 1; i >= 0; i--) {
+        const comida = comidas[i];
+
+        // Verifica colisão com a célula principal
+        if (Math.hypot(celula.x - comida.x, celula.y - comida.y) < celula.raio - comida.raio * 0.1) {
+            comidas.splice(i, 1);
+            quantComidas -= 1;
+            continue;
+        }
+
+        // Verifica colisão com NPCs
+        for (let npc of npcs) {
+            if (Math.hypot(npc.x - comida.x, npc.y - comida.y) < npc.raio - comida.raio * 0.1) {
+                comidas.splice(i, 1);
+                quantComidas -= 1;
+                break;
+            }
+        }
+    }
+}
+
+
+
 // Evento de teclado
 // Escuta pressionar
 document.addEventListener('keydown', (e) => {
@@ -256,6 +280,7 @@ function rodar_jogo() {
     moverCelula();
     moverTodosNPCs();
     desenharTudo();
+    verificarComidasComidas();
     requestAnimationFrame(rodar_jogo);
 }
 
