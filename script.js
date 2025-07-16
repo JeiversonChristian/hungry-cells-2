@@ -411,6 +411,14 @@ const msg = document.getElementById('mensagem-perda');
 function mostrarMensagemDerrota() {
     msg.style.display = 'flex';
 }
+const msgv = document.getElementById('mensagem-vitoria');
+function mostrarMensagemVitoria() {
+    msgv.style.display = 'flex';
+}
+
+function verificarVitoria(){
+    if (quantNPCs==0&&quantPredadores==0&&celula.viva) mostrarMensagemVitoria()
+}
 
 function resetarJogo() {
     // Limpa os arrays
@@ -433,6 +441,7 @@ function resetarJogo() {
     criarComidas();
 
     msg.style.display = 'none';
+    msgv.style.display = 'none';
 }
 
 // Evento de teclado
@@ -487,6 +496,7 @@ function rodar_jogo() {
     tentarGerarMaisComidas();
     atualizarVidaDasCelulas();
     atualizarBarraDeVida();
+    verificarVitoria();
     requestAnimationFrame(rodar_jogo);
 }
 

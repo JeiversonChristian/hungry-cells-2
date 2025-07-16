@@ -150,7 +150,7 @@ canvas {
   position: relative;
 }
 
-#mensagem-perda {
+#mensagem-perda, #mensagem-vitoria {
     position: absolute;
     top: 0;
     left: 0;
@@ -168,7 +168,7 @@ canvas {
     display: none;
 }
 
-#mensagem-perda p {
+#mensagem-perda p, #mensagem-vitoria p {
     max-width: 600px;
 }
 
