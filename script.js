@@ -23,7 +23,7 @@ function criarCelulaPrincipal() {
         cor: 'blue',
         corContorno: '#00ffff', // Azul neon
         grossuraContorno: 3,
-        vel: raioBase*0.2,
+        vel: raioBase*0.3,
         teclas: {}
     };
 }
@@ -38,7 +38,7 @@ function criarNPCs() {
             y: Math.random() * (canvas.height - 50) + 25,
             raio: raioBase,
             cor: 'blue',
-            vel: raioBase*0.2,
+            vel: raioBase*0.3,
             dirX: (Math.random() - 0.5) * 2,
             dirY: (Math.random() - 0.5) * 2,
             mudarDirContador: 0,
@@ -59,6 +59,34 @@ function criarComidas() {
             raio: raioBase / 4,
             cor: 'green'
         });
+    }
+}
+
+function tentarGerarMaisComidas() {
+    const chance = Math.random();
+    if (chance < 0.005) {  // % de chance de gerar mais
+        const novas = Math.floor(Math.random() * 3) + 1;  // 1 a 3
+        for (let i = 0; i < novas; i++) {
+            comidas.push({
+                x: Math.random() * (canvas.width - raioBase / 2) + raioBase / 4,
+                y: Math.random() * (canvas.height - raioBase / 2) + raioBase / 4,
+                raio: raioBase / 4,
+                cor: 'green'
+            });
+            quantComidas += 1;
+        }
+    }
+    else if(quantComidas == 0){
+        const novas = Math.floor(Math.random() * 3) + 1;  // 1 a 3
+        for (let i = 0; i < novas; i++) {
+            comidas.push({
+                x: Math.random() * (canvas.width - raioBase / 2) + raioBase / 4,
+                y: Math.random() * (canvas.height - raioBase / 2) + raioBase / 4,
+                raio: raioBase / 4,
+                cor: 'green'
+            });
+            quantComidas += 1;
+        }
     }
 }
 
@@ -221,6 +249,7 @@ function moverTodosNPCs() {
     }
 }
 
+
 function verificarComidasComidas() {
     for (let i = quantComidas - 1; i >= 0; i--) {
         const comida = comidas[i];
@@ -281,6 +310,7 @@ function rodar_jogo() {
     moverTodosNPCs();
     desenharTudo();
     verificarComidasComidas();
+    tentarGerarMaisComidas();
     requestAnimationFrame(rodar_jogo);
 }
 
