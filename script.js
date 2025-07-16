@@ -23,7 +23,7 @@ function criarCelulaPrincipal() {
         cor: 'blue',
         corContorno: '#00ffff', // Azul neon
         grossuraContorno: 3,
-        vel: 5,
+        vel: raioBase*0.2,
         teclas: {}
     };
 }
@@ -38,7 +38,7 @@ function criarNPCs() {
             y: Math.random() * (canvas.height - 50) + 25,
             raio: raioBase,
             cor: 'blue',
-            vel: 5,
+            vel: raioBase*0.2,
             dirX: (Math.random() - 0.5) * 2,
             dirY: (Math.random() - 0.5) * 2,
             mudarDirContador: 0,
@@ -73,9 +73,9 @@ function desenharCelula(c) {
     ctx.fill();
     if (c === celula) {
         ctx.shadowColor = c.corContorno;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = raioBase*0.7;
         ctx.strokeStyle = c.corContorno;
-        ctx.lineWidth = 4;
+        ctx.lineWidth = raioBase*0.2;
         ctx.stroke();
     }
     ctx.closePath();
