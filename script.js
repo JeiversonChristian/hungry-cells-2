@@ -2,32 +2,41 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Ajusta o tamanho do canvas para a tela
+let raioBase = 25;
 function ajustarCanvas() {
     const main = document.getElementById('jogo');
     canvas.width = main.clientWidth;
     canvas.height = main.clientHeight;
+     // Ajusta o raio base
+    if (canvas.width < 600) {
+        raioBase = 15;  // menor para celular
+    } else {
+        raioBase = 20;  // maior para computador
+    }
 }
 
-const celula = {
-    x: 100,
-    y: 100,
-    raio: 25,
-    cor: 'blue',
-    corContorno: 'black',
-    grossuraContorno: 3,
-    vel: 5,
-    teclas: {}
-};
+function criarCelulaPrincipal() {
+    return {
+        x: 100,
+        y: 100,
+        raio: raioBase,
+        cor: 'blue',
+        corContorno: '#00ffff', // Azul neon
+        grossuraContorno: 3,
+        vel: 5,
+        teclas: {}
+    };
+}
 
 const npcs = [];
-const quantNPCs = 5;  // quantos você quiser
+const quantNPCs = 10;
 
 function criarNPCs() {
     for (let i = 0; i < quantNPCs; i++) {
         npcs.push({
             x: Math.random() * (canvas.width - 50) + 25,
             y: Math.random() * (canvas.height - 50) + 25,
-            raio: 25,
+            raio: raioBase,
             cor: 'blue',
             vel: 5,
             dirX: (Math.random() - 0.5) * 2,
@@ -48,8 +57,10 @@ function desenharCelula(c) {
     ctx.fillStyle = c.cor;
     ctx.fill();
     if (c === celula) {
+        ctx.shadowColor = c.corContorno;
+        ctx.shadowBlur = 15;
         ctx.strokeStyle = c.corContorno;
-        ctx.lineWidth = c.grossuraContorno;
+        ctx.lineWidth = 4;
         ctx.stroke();
     }
     ctx.closePath();
@@ -230,9 +241,15 @@ function rodar_jogo() {
     requestAnimationFrame(rodar_jogo);
 }
 
+let celula = {};
+
 // Espera o DOM carregar para garantir que os elementos existam
 window.addEventListener('load', () => {
+    // Ajusta o canvas ao tamanho da tela
     ajustarCanvas();
+
+    // Cria a célula principal após o canvas ter sido ajustado
+    celula = criarCelulaPrincipal();
 
     // Cria os NPCs APÓS o canvas ter sido ajustado
     criarNPCs();
