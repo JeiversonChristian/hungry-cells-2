@@ -2,16 +2,16 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Ajusta o tamanho do canvas para a tela
-let raioBase = 25;
+let raioBase = 0;
 function ajustarCanvas() {
     const main = document.getElementById('jogo');
     canvas.width = main.clientWidth;
     canvas.height = main.clientHeight;
      // Ajusta o raio base
     if (canvas.width < 600) {
-        raioBase = 15;  // menor para celular
+        raioBase = 4;  // menor para celular
     } else {
-        raioBase = 20;  // maior para computador
+        raioBase = 12;  // maior para computador
     }
 }
 
@@ -49,7 +49,7 @@ function criarNPCs() {
 
 const comidas = [];
 const totalCelulas = quantNPCs + 1; // NPCs + célula principal
-const quantComidas = Math.floor(totalCelulas * 0.8); // 80%, inteiro
+const quantComidas = Math.floor(totalCelulas * 1.5); // 150%, inteiro
 
 function criarComidas() {
     for (let i = 0; i < quantComidas; i++) {
