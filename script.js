@@ -9,7 +9,7 @@ function ajustarCanvas() {
     canvas.height = main.clientHeight;
      // Ajusta o raio base
     if (canvas.width < 600) {
-        raioBase = 4;  // menor para celular
+        raioBase = 5;  // menor para celular
     } else {
         raioBase = 12;  // maior para computador
     }
@@ -17,6 +17,7 @@ function ajustarCanvas() {
 
 function criarCelulaPrincipal() {
     return {
+        viva: true,
         x: 100,
         y: 100,
         raio: raioBase,
@@ -24,7 +25,8 @@ function criarCelulaPrincipal() {
         corContorno: '#00ffff', // Azul neon
         grossuraContorno: 3,
         vel: raioBase*0.3,
-        teclas: {}
+        teclas: {},
+        vida: 100
     };
 }
 
@@ -42,7 +44,8 @@ function criarNPCs() {
             dirX: (Math.random() - 0.5) * 2,
             dirY: (Math.random() - 0.5) * 2,
             mudarDirContador: 0,
-            limiteParaMudarDir: Math.random() * 100
+            limiteParaMudarDir: Math.random() * 100,
+            vida: 100
         });
     }
 }
@@ -116,7 +119,7 @@ function desenharTudo() {
     for (let npc of npcs) {
         desenharCelula(npc);
     }
-    desenharCelula(celula);
+    if (celula.viva) desenharCelula(celula);
 }
 
 function estaColidindo(a, b) {
@@ -192,7 +195,7 @@ function moverNPC(npc, indice) {
     npc.y = Math.max(npc.raio, Math.min(canvas.height - npc.raio, npc.y));
 
     // Colisão com PLAYER
-    if (estaColidindo(npc, celula)) {
+    if (celula.viva && estaColidindo(npc, celula)) {
         npc.x = anteriorX;
         npc.y = anteriorY;
 
@@ -249,15 +252,15 @@ function moverTodosNPCs() {
     }
 }
 
-
 function verificarComidasComidas() {
     for (let i = quantComidas - 1; i >= 0; i--) {
         const comida = comidas[i];
 
         // Verifica colisão com a célula principal
-        if (Math.hypot(celula.x - comida.x, celula.y - comida.y) < celula.raio - comida.raio * 0.1) {
+        if (celula.viva && (Math.hypot(celula.x - comida.x, celula.y - comida.y) < celula.raio - comida.raio * 0.1)) {
             comidas.splice(i, 1);
             quantComidas -= 1;
+            celula.vida = Math.min(100, celula.vida + 30);
             continue;
         }
 
@@ -266,22 +269,40 @@ function verificarComidasComidas() {
             if (Math.hypot(npc.x - comida.x, npc.y - comida.y) < npc.raio - comida.raio * 0.1) {
                 comidas.splice(i, 1);
                 quantComidas -= 1;
+                npc.vida = Math.min(100, npc.vida + 30);
                 break;
             }
         }
     }
 }
 
+function atualizarVidaDasCelulas() {
+    // Jogador
+    if (celula.viva) celula.vida -= 0.05;
+    if (celula.vida <= 0) {
+        celula.viva = false; // morreu!
+        //celula.cor = 'red';
+    }
 
+    // NPCs
+    for (let i = quantNPCs - 1; i >= 0; i--) {
+        npcs[i].vida -= 0.05;
+        if (npcs[i].vida <= 0) {
+            npcs.splice(i, 1); // remove o NPC morto
+            quantNPCs -= 1;
+            //npcs[i].cor = 'red';
+        }
+    }
+}
 
 // Evento de teclado
 // Escuta pressionar
 document.addEventListener('keydown', (e) => {
-  celula.teclas[e.key.toLowerCase()] = true;
+    if (celula.viva) celula.teclas[e.key.toLowerCase()] = true;
 });
 // Escuta soltar
 document.addEventListener('keyup', (e) => {
-  celula.teclas[e.key.toLowerCase()] = false;
+    if (celula.viva) celula.teclas[e.key.toLowerCase()] = false;
 });
 
 // Simula pressionar e soltar tecla com toques nos botões
@@ -290,27 +311,35 @@ document.querySelectorAll('#controles button').forEach(botao => {
 
     botao.addEventListener('touchstart', (e) => {
         e.preventDefault(); // evita clique duplo no mobile
-        celula.teclas[direcao] = true;
+        if (celula.viva) celula.teclas[direcao] = true;
     });
 
     botao.addEventListener('touchend', (e) => {
         e.preventDefault();
-        celula.teclas[direcao] = false;
+        if (celula.viva) celula.teclas[direcao] = false;
     });
 
     // Suporte opcional para mouse
-    botao.addEventListener('mousedown', () => celula.teclas[direcao] = true);
-    botao.addEventListener('mouseup', () => celula.teclas[direcao] = false);
-    botao.addEventListener('mouseleave', () => celula.teclas[direcao] = false);
+    
+    botao.addEventListener('mousedown', () => {
+        if (celula.viva) celula.teclas[direcao] = true;
+    });
+    botao.addEventListener('mouseup', () => {
+        if (celula.viva) celula.teclas[direcao] = false;
+    });
+    botao.addEventListener('mouseleave', () => {
+        if (celula.viva) celula.teclas[direcao] = false;
+    });    
 });
 
 function rodar_jogo() {
     limparTela();
-    moverCelula();
+    if (celula.viva) moverCelula();
     moverTodosNPCs();
     desenharTudo();
     verificarComidasComidas();
     tentarGerarMaisComidas();
+    atualizarVidaDasCelulas();
     requestAnimationFrame(rodar_jogo);
 }
 
