@@ -291,6 +291,7 @@ function moverPredador(predador, indice) {
     // Come o jogador
     if (celula.viva && estaColidindo(predador, celula)) {
         celula.viva = false;
+        mostrarMensagemDerrota();
         predador.vida = Math.min(100, predador.vida + 30);
     }
 
@@ -374,6 +375,7 @@ function atualizarVidaDasCelulas() {
     if (celula.viva) celula.vida -= 0.05;
     if (celula.vida <= 0) {
         celula.viva = false; // morreu!
+        mostrarMensagemDerrota();
         //celula.cor = 'red';
     }
 
@@ -405,6 +407,11 @@ function atualizarBarraDeVida() {
     }
 }
 
+const msg = document.getElementById('mensagem-perda');
+function mostrarMensagemDerrota() {
+    msg.style.display = 'flex';
+}
+
 function resetarJogo() {
     // Limpa os arrays
     npcs.length = 0;
@@ -424,6 +431,8 @@ function resetarJogo() {
     criarNPCs();
     criarPredadores();
     criarComidas();
+
+    msg.style.display = 'none';
 }
 
 // Evento de teclado
