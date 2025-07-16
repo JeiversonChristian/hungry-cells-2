@@ -47,6 +47,21 @@ function criarNPCs() {
     }
 }
 
+const comidas = [];
+const totalCelulas = quantNPCs + 1; // NPCs + célula principal
+const quantComidas = Math.floor(totalCelulas * 0.8); // 80%, inteiro
+
+function criarComidas() {
+    for (let i = 0; i < quantComidas; i++) {
+        comidas.push({
+            x: Math.random() * (canvas.width - raioBase / 2) + raioBase / 4,
+            y: Math.random() * (canvas.height - raioBase / 2) + raioBase / 4,
+            raio: raioBase / 4,
+            cor: 'green'
+        });
+    }
+}
+
 function limparTela() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -67,6 +82,9 @@ function desenharCelula(c) {
 }
 
 function desenharTudo() {
+    for (let comida of comidas) {
+        desenharCelula(comida);
+    }
     for (let npc of npcs) {
         desenharCelula(npc);
     }
@@ -253,6 +271,9 @@ window.addEventListener('load', () => {
 
     // Cria os NPCs APÓS o canvas ter sido ajustado
     criarNPCs();
+
+    // O tamanho das comidas é em função do raio do raio base
+    criarComidas();
 
     // Inicia o jogo só depois disso tudo
     rodar_jogo();
