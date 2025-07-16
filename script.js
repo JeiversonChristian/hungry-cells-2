@@ -50,6 +50,26 @@ function criarNPCs() {
     }
 }
 
+const predadores = [];
+let quantPredadores = Math.floor(quantNPCs * 0.3);
+
+function criarPredadores() {
+    for (let i = 0; i < quantPredadores; i++) {
+        predadores.push({
+            x: Math.random() * (canvas.width - 50) + 25,
+            y: Math.random() * (canvas.height - 50) + 25,
+            raio: raioBase*2,
+            cor: 'red',
+            vel: raioBase * 0.4,  // pode ser mais rápido
+            dirX: (Math.random() - 0.5) * 2,
+            dirY: (Math.random() - 0.5) * 2,
+            mudarDirContador: 0,
+            limiteParaMudarDir: Math.random() * 100,
+            vida: 100
+        });
+    }
+}
+
 const comidas = [];
 let totalCelulas = quantNPCs + 1; // NPCs + célula principal
 let quantComidas = Math.floor(totalCelulas * 1.5); // 150%, inteiro
@@ -118,6 +138,9 @@ function desenharTudo() {
     }
     for (let npc of npcs) {
         desenharCelula(npc);
+    }
+    for (let predador of predadores) {
+        desenharCelula(predador);
     }
     if (celula.viva) desenharCelula(celula);
 }
@@ -252,6 +275,76 @@ function moverTodosNPCs() {
     }
 }
 
+function moverPredador(predador, indice) {
+    // Guarda posição anterior
+    let anteriorX = predador.x;
+    let anteriorY = predador.y;
+
+    // Move na direção atual
+    predador.x += predador.dirX * predador.vel;
+    predador.y += predador.dirY * predador.vel;
+
+    // Limites da tela
+    predador.x = Math.max(predador.raio, Math.min(canvas.width - predador.raio, predador.x));
+    predador.y = Math.max(predador.raio, Math.min(canvas.height - predador.raio, predador.y));
+
+    // Come o jogador
+    if (celula.viva && estaColidindo(predador, celula)) {
+        celula.viva = false;
+        predador.vida = Math.min(100, predador.vida + 30);
+    }
+
+    // Come NPCs azuis
+    for (let i = quantNPCs - 1; i >= 0; i--) {
+        if (estaColidindo(predador, npcs[i])) {
+            npcs.splice(i, 1);
+            quantNPCs -=1;
+            predador.vida = Math.min(100, predador.vida + 30);
+        }
+    }
+
+    // Colisão com outros predadores
+    for (let j = 0; j < predadores.length; j++) {
+        if (j === indice) continue;
+        const outro = predadores[j];
+        if (estaColidindo(predador, outro)) {
+            // Recuar para a posição anterior
+            predador.x = anteriorX;
+            predador.y = anteriorY;
+
+            // Contornar o outro predador
+            if (predador.dirY !== 0 && predador.x !== outro.x) {
+                if (predador.x > outro.x) predador.x += predador.vel / 2;
+                else predador.x -= predador.vel / 2;
+            }
+            if (predador.dirX !== 0 && predador.y !== outro.y) {
+                if (predador.y > outro.y) predador.y += predador.vel / 2;
+                else predador.y -= predador.vel / 2;
+            }
+
+            // Novamente, limitar para não sair da tela
+            predador.x = Math.max(predador.raio, Math.min(canvas.width - predador.raio, predador.x));
+            predador.y = Math.max(predador.raio, Math.min(canvas.height - predador.raio, predador.y));
+        }
+    }
+
+    // Mudar direção aleatoriamente às vezes
+    predador.mudarDirContador++;
+    if (predador.mudarDirContador > predador.limiteParaMudarDir) {
+        predador.limiteParaMudarDir = Math.random() * 100;
+        predador.dirX = (Math.random() - 0.5) * 2;
+        predador.dirY = (Math.random() - 0.5) * 2;
+        predador.mudarDirContador = 0;
+    }
+}
+
+function moverTodosPredadores() {
+    for (let i = 0; i < predadores.length; i++) {
+        moverPredador(predadores[i], i);
+    }
+}
+
+
 function verificarComidasComidas() {
     for (let i = quantComidas - 1; i >= 0; i--) {
         const comida = comidas[i];
@@ -290,7 +383,15 @@ function atualizarVidaDasCelulas() {
         if (npcs[i].vida <= 0) {
             npcs.splice(i, 1); // remove o NPC morto
             quantNPCs -= 1;
-            //npcs[i].cor = 'red';
+        }
+    }
+
+    // Predadores
+    for (let i = quantPredadores - 1; i >= 0; i--) {
+        predadores[i].vida -= 0.05;
+        if (predadores[i].vida <= 0) {
+            predadores.splice(i, 1);
+            quantPredadores -= 1;
         }
     }
 }
@@ -345,6 +446,7 @@ function rodar_jogo() {
     limparTela();
     if (celula.viva) moverCelula();
     moverTodosNPCs();
+    moverTodosPredadores();
     desenharTudo();
     verificarComidasComidas();
     tentarGerarMaisComidas();
@@ -365,6 +467,7 @@ window.addEventListener('load', () => {
 
     // Cria os NPCs APÓS o canvas ter sido ajustado
     criarNPCs();
+    criarPredadores();
 
     // O tamanho das comidas é em função do raio do raio base
     criarComidas();
