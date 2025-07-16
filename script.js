@@ -405,6 +405,27 @@ function atualizarBarraDeVida() {
     }
 }
 
+function resetarJogo() {
+    // Limpa os arrays
+    npcs.length = 0;
+    predadores.length = 0;
+    comidas.length = 0;
+
+    quantNPCs = 10;
+    totalCelulas = quantNPCs + 1;
+    quantComidas = Math.floor(totalCelulas * 1.5);
+    quantPredadores = Math.floor(quantNPCs * 0.3);
+
+    // Ajusta canvas e raio
+    ajustarCanvas();
+
+    // Cria novamente tudo
+    celula = criarCelulaPrincipal();
+    criarNPCs();
+    criarPredadores();
+    criarComidas();
+}
+
 // Evento de teclado
 // Escuta pressionar
 document.addEventListener('keydown', (e) => {
@@ -440,6 +461,11 @@ document.querySelectorAll('#controles button').forEach(botao => {
     botao.addEventListener('mouseleave', () => {
         if (celula.viva) celula.teclas[direcao] = false;
     });    
+});
+
+// Evento de clique no botão de reset
+document.getElementById('reset-btn').addEventListener('click', () => {
+    resetarJogo();
 });
 
 function rodar_jogo() {

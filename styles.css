@@ -104,6 +104,26 @@ canvas {
     background-color: var(--cor-botao-ativo);
 }
 
+#reset-container {
+    margin-top: 5px;
+    text-align: center;
+}
+
+#reset-btn {
+    width: 100px;
+    height: 40px;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 10px;
+    border: 2px solid var(--cor-borda-botao);
+    background-color: var(--cor-botao);
+    cursor: pointer;
+}
+
+#reset-btn:active {
+    background-color: var(--cor-botao-ativo);
+}
+
 /****************************************
  * ❤️ BARRA DE VIDA NO HEADER
  ****************************************/
@@ -146,5 +166,11 @@ canvas {
     #barra-vida-container {
         width: 90px;
         height: 16px;
+    }
+
+    #reset-btn {
+        width: 140px;
+        height: 60px;
+        font-size: 22px;
     }
 }
