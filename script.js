@@ -289,7 +289,7 @@ function moverPredador(predador, indice) {
     predador.y = Math.max(predador.raio, Math.min(canvas.height - predador.raio, predador.y));
 
     // Come o jogador
-    if (celula.viva && estaColidindo(predador, celula)) {
+     if (celula.viva && (Math.hypot(predador.x - celula.x, predador.y - celula.y) < predador.raio - celula.raio * 0.1)) {
         celula.viva = false;
         mostrarMensagemDerrota();
         predador.vida = Math.min(100, predador.vida + 30);
@@ -297,7 +297,7 @@ function moverPredador(predador, indice) {
 
     // Come NPCs azuis
     for (let i = quantNPCs - 1; i >= 0; i--) {
-        if (estaColidindo(predador, npcs[i])) {
+        if (Math.hypot(predador.x - npcs[i].x, predador.y - npcs[i].y) < predador.raio - npcs[i].raio * 0.1) {
             npcs.splice(i, 1);
             quantNPCs -=1;
             predador.vida = Math.min(100, predador.vida + 30);
