@@ -410,6 +410,7 @@ function atualizarBarraDeVida() {
 const msg = document.getElementById('mensagem-perda');
 function mostrarMensagemDerrota() {
     msg.style.display = 'flex';
+    msgv.style.display = 'none';
 }
 const msgv = document.getElementById('mensagem-vitoria');
 function mostrarMensagemVitoria() {
