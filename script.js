@@ -487,6 +487,18 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     resetarJogo();
 });
 
+// 🎵 Música de fundo
+const musicaFundo = new Audio('sons/Relaxing Aquatic Ambience  Donkey Kong Country.MP3');
+musicaFundo.loop = true;
+musicaFundo.volume = 0.05; // volume entre 0 (mudo) e 1 (máximo)
+musicaFundo.play();
+
+document.body.addEventListener('click', () => {
+    if (musicaFundo.paused) {
+        musicaFundo.play();
+    }
+}, { once: true }); // só executa uma vez
+
 function rodar_jogo() {
     limparTela();
     if (celula.viva) moverCelula();
